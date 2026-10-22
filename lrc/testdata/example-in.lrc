@@ -1,0 +1,45 @@
+[ar:Example Artist ]
+    [al:Example Album]
+    [ti: Example Song]
+    [au:Example Writer ]
+    [length:82:05]
+    [by:timedtext tests]
+
+[00:00:00.03]
+an opening line
+with an untimed second line
+
+[00:03.50]
+a timecode alone on its line
+followed by two lines of text
+
+[00:00:07.37]text after the timecode
+and an untimed line after it
+
+[00:00:13.96][00:00:13.97]
+a chorus shared by
+two adjacent timecodes
+
+[00:00:18.07]one[00:00:18.15] two on the same line
+and the line after them
+
+[00:24.03]
+<00:24.03>timed <00:24.50>words <00:25.00>here<00:25.40>
+[00:26.10]
+
+
+[00:30:50]
+centiseconds after a colon
+[00:35.125]
+a fraction rounded to centiseconds
+[01:02:003]
+three fields read as hours
+[00:40.00]	  tabs and spaces around text  	
+
+[00:45.00][00:47.00]<00:45.00>repeated <00:45.50>words
+[00:48.00]
+[59:58.00]
+just before an hour
+[75:00.00]
+minutes past sixty
+[01:20:00.00]

@@ -1,0 +1,2 @@
+go test fuzz v1
+string("<tt><body><div><p><span begin=\"00\">00</span>00000000</p></div></body></tt>")

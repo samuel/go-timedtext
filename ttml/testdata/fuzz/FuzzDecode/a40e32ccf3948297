@@ -1,0 +1,2 @@
+go test fuzz v1
+string("0000000000000000000000000<tt><body><div><p> <A/> 0</p></div></body></tt>")

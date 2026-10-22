@@ -1,0 +1,12 @@
+[ti: Example Song]
+[ar: Example Artist]
+[al: Example Album]
+[length: 3:20]
+
+[00:00.50]an opening line
+[00:04.25]<00:04.25>word <00:04.80>by <00:05.30>word<00:06.00>
+[00:06.00]
+[00:09.10]a line and its continuation
+[00:12.00]an earlier line
+[00:11.00]out of order lines stay in order
+[61:30.75]minutes past an hour
