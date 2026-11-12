@@ -131,7 +131,8 @@ or tag isn't escaped, so it decodes differently.
 
 ## Other formats
 
-- SRT: the index line is optional, and settings may follow the end time after a space or tab. Text after
+- SRT: the index line is optional, and settings may follow the end time after a space or tab. A
+  timing line may also separate the times with a comma (`00:00:01.000,00:00:02.000`). Text after
   a blank line that isn't followed by a timing line is added to the cue before it, since some files have
   blank lines inside cues. An index that isn't the cue's position becomes the cue ID in the model.
 - WebVTT: NOTE, STYLE, and REGION blocks round-trip. The `Language:` header line maps to the model's

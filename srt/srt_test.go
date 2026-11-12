@@ -148,6 +148,14 @@ func TestDecodeLenient(t *testing.T) {
 			},
 		},
 		{
+			name: "comma between times",
+			in:   "00:00:01.000,00:00:02.000\na\n00:00:09.000,00:00:09.500\n\n00:00:03,000,00:00:04,000\nb\n",
+			exp: []Cue{
+				{Start: time.Second, End: 2 * time.Second, Lines: []string{"a", "00:00:09.000,00:00:09.500"}},
+				{Start: 3 * time.Second, End: 4 * time.Second, Lines: []string{"b"}},
+			},
+		},
+		{
 			name: "CR line endings and tab before settings",
 			in:   "1\r00:00:01,000 --> 00:00:02,000\tX1:1\ra\rb\r\r2\r00:00:03,000 --> 00:00:04,000\rc\r",
 			exp: []Cue{

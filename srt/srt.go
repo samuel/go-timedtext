@@ -18,7 +18,11 @@ import (
 	"samuelks.com/timedtext/internal/lines"
 )
 
-var reTag = regexp.MustCompile(`</?[A-Za-z][^>]*>|\{\\[^}]*\}`)
+var (
+	reTag = regexp.MustCompile(`</?[A-Za-z][^>]*>|\{\\[^}]*\}`)
+	// reCommaTiming matches a timing line that separates the times with a comma instead of an arrow.
+	reCommaTiming = regexp.MustCompile(`^(\d+:\d{2}:\d{2}[.,]\d{1,9}),(\d+:\d{2}:\d{2}[.,]\d{1,9})$`)
+)
 
 // Subtitles is the contents of an SRT file.
 type Subtitles struct {
@@ -59,6 +63,7 @@ type DecodeOptions struct {
 
 // Decode reads SRT subtitles and converts them to UTF-8. A byte order mark or UTF-16 is detected first,
 // then valid UTF-8, then opt.Charset. Cues are separated by blank lines, and the index line is optional.
+// A timing line may also be "hh:mm:ss.mmm,hh:mm:ss.mmm", without an arrow or settings.
 // Lines may end in "\n", "\r\n", or "\r". Text after a blank line that isn't followed by a timing line is
 // added to the cue before it, since some files have blank lines inside cues.
 func Decode(r io.Reader, opt DecodeOptions) (*Subtitles, error) {
@@ -99,9 +104,9 @@ func Decode(r io.Reader, opt DecodeOptions) (*Subtitles, error) {
 			cue = nil
 		case cue != nil:
 			cue.Lines = append(cue.Lines, text)
-		case strings.Contains(text, "-->"):
+		case strings.Contains(text, "-->") || reCommaTiming.MatchString(text):
 			var c Cue
-			if c.Start, c.End, c.Settings, err = clock.ParseTiming(text); err != nil {
+			if c.Start, c.End, c.Settings, err = parseTiming(text); err != nil {
 				return nil, &SyntaxError{Line: n, Err: err}
 			}
 			if pending != "" {
@@ -129,6 +134,20 @@ func Decode(r io.Reader, opt DecodeOptions) (*Subtitles, error) {
 		}
 	}
 	return subs, nil
+}
+
+func parseTiming(line string) (start, end time.Duration, settings string, err error) {
+	m := reCommaTiming.FindStringSubmatch(line)
+	if m == nil {
+		return clock.ParseTiming(line)
+	}
+	if start, err = clock.Parse(m[1]); err != nil {
+		return 0, 0, "", err
+	}
+	if end, err = clock.Parse(m[2]); err != nil {
+		return 0, 0, "", err
+	}
+	return start, end, "", nil
 }
 
 // Encode writes SRT subtitles. Times are rounded to the nearest millisecond, and negative times are an
